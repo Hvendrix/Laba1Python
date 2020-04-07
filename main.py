@@ -1,10 +1,17 @@
 import sys
 import os
 import psycopg2
+
+
 from PyQt5 import QtWidgets
 
 import Form2
 import Form3
+
+import CreateTable
+import InsertIntoTable
+import SelectFromTable
+import PSQL
 
 class ExampleApp(QtWidgets.QMainWindow, Form2.Ui_MainWindow):
     def __init__(self):
@@ -39,17 +46,18 @@ class ExampleApp3(QtWidgets.QMainWindow, Form3.Ui_MainWindow):
 
 
 def main():
+    print("Let's start")
+    # CreateTable.main()
+    # InsertIntoTable.main()
+   #  SelectFromTable.main()
+    PSQL.main()
 
-    # conn = psycopg2.connect(dbname='hvendrix', user='hvendrix',
-    #                         password="", host='127.0.0.1', port="5432")
-    # cursor = conn.cursor()
-    # print(cursor.execute("SELECT * FROM playground"))
 
 
-    app = QtWidgets.QApplication(sys.argv)
-    window = ExampleApp3()
-    window.show()
-    app.exec_()
+    # app = QtWidgets.QApplication(sys.argv)
+    # window = ExampleApp3()
+    # window.show()
+    # app.exec_()
 
 
 if __name__ == '__main__':
