@@ -10,24 +10,51 @@ def main():
 
 
 
-    def createTable():
-        cursor.execute('''CREATE TABLE clients2 (id serial PRIMARY KEY, Имя varchar(50), Фамилия varchar(50), Комментарий varchar (25), Долг int, Max_Кредит int);''')
+    def createClients():
+        cursor.execute(
+            '''CREATE TABLE Клиенты (id serial PRIMARY KEY, Имя varchar(50), Фамилия varchar(50), 
+            Комментарий varchar (25), Долг int, Max_Кредит int);'''
+        )
         conn.commit()
 
-
-    def insertIntoTable():
-
+    def createGoods():
         cursor.execute(
-            '''INSERT INTO clients2 (Имя, Фамилия, Комментарий, Долг, Max_Кредит) VALUES ('Иван', 'Иванов', 'надежен', 2000, 3000)'''
+            '''CREATE TABLE Товары (id serial PRIMARY KEY, Название varchar(50), Цена int, Количество int);'''
         )
         conn.commit()
 
 
+    def insertIntoClients():
+
+        cursor.execute(
+            '''INSERT INTO Клиенты (Имя, Фамилия, Комментарий, Долг, Max_Кредит) VALUES ('Иван', 'Иванов', 'надежен', 2000, 3000)'''
+        )
+
+        cursor.execute(
+            '''INSERT INTO Клиенты (Имя, Фамилия, Комментарий, Долг, Max_Кредит) VALUES ('Денис', 'Сидоров', 'надежен', 4000, 9000)'''
+        )
+        conn.commit()
+
+    def insertIntoGoods():
+
+        cursor.execute(
+            '''INSERT INTO Товары (Название, Цена, Количество) VALUES ('Приора', 20000, 4)'''
+        )
+        conn.commit()
 
 
+    def selectFromClients():
+        cursor.execute("SELECT id, Имя from Клиенты")
 
-    def selectFromTable():
-        cursor.execute("SELECT id, Имя from clients2")
+        rows = cursor.fetchall()
+        for row in rows:
+            print("id =", row[0])
+            print("ИМЯ =", row[1], "\n")
+
+        print("Operation done successfully")
+
+    def selectFromGoods():
+        cursor.execute("SELECT id, Название from Товары")
 
         rows = cursor.fetchall()
         for row in rows:
@@ -38,8 +65,14 @@ def main():
 
 
 
-    selectFromTable()
+    #createGoods()
+    #insertIntoGoods()
+    selectFromGoods()
 
+
+
+    #createClients()
+    #insertIntoClients()
 
     cursor.close()
     conn.close()
