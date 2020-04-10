@@ -1,11 +1,12 @@
 import sys
 import os
 import psycopg2
+from auth import *
 
 
 def main():
-    conn = psycopg2.connect(dbname='hvendrix', user='hvendrix',
-                            password="200915", host='localhost', port="5432")
+    conn = psycopg2.connect(dbname=dbnameSql, user=loginSql,
+                            password=passSql, host='localhost', port="5432")
     cursor = conn.cursor()
 
 
@@ -67,7 +68,7 @@ def main():
 
     #createGoods()
     #insertIntoGoods()
-    selectFromGoods()
+    #selectFromGoods()
 
 
 

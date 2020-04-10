@@ -1,9 +1,10 @@
 import sys
 import os
 import psycopg2
+from auth import *
 
 
-from PyQt5 import QtWidgets
+from PyQt5 import QtWidgets, QtCore, QtGui
 
 import Form2
 import Form3
@@ -42,42 +43,30 @@ class ExampleApp3(QtWidgets.QMainWindow, Form3.Ui_MainWindow):
     def setUpText1(self):
         self.label.setText("qwertasd")
 
-
 # подключаем бд
-conn = psycopg2.connect(dbname='hvendrix', user='hvendrix',
-                        password="200915", host='localhost', port="5432")
+conn = psycopg2.connect(dbname=dbnameSql, user=loginSql,
+                        password=passSql, host='localhost', port="5432")
 cursor = conn.cursor()
+
+
 
 class Interface(QtWidgets.QMainWindow, interface.Ui_MainWindow):
     def __init__(self):
         super().__init__()
         self.setupUi(self)
-        self.NameBox.addItem("EEE")
-        self.NameBox.addItem("ККК")
-
         self.setNameIntoNameBox()
 
         self.NameBox.currentIndexChanged.connect(self.loadDataFromName)
 
 
 
-        self.loadBtn.clicked.connect(self.loadData)
 
-    def loadData(self):
-        cursor.execute('SELECT * FROM Товары;')
-        all_data = cursor.fetchall()
-        self.tableWidget.setRowCount(0)
-        self.tableWidget.setColumnCount(len(all_data[0]))
-        for row_number, row_data in enumerate(all_data):
-            self.tableWidget.insertRow(row_number)
-            for column_number, data in enumerate(row_data):
-                self.tableWidget.setItem(row_number, column_number, QtWidgets.QTableWidgetItem(str(data)))
+
 
 
 
     def setNameIntoNameBox(self):
         cursor.execute("SELECT id, Имя from Клиенты")
-
         rows = cursor.fetchall()
         for row in rows:
             self.NameBox.addItem(row[1])
@@ -90,23 +79,36 @@ class Interface(QtWidgets.QMainWindow, interface.Ui_MainWindow):
 
 
     def loadDataFromName(self):
+
         name = self.NameBox.currentText()
         sName = str(name)
-        cursor.execute(f'''SELECT Имя, Фамилия, Долг, Max_Кредит FROM Клиенты WHERE Имя = '{sName}';''')
+        cursor.execute(f'''SELECT Имя, Комментарий, Долг, Max_Кредит FROM Клиенты WHERE Имя = '{sName}';''')
         all_data = cursor.fetchall()
         self.tableWidget.setRowCount(0)
         self.tableWidget.setColumnCount(len(all_data[0]))
+
+
+        # Названия для столбцов
+        column_names = ['Имя', 'Комментарий', 'Долг', 'Макс. кредит']
+        def to_table_item(item):
+            return QtWidgets.QTableWidgetItem(str(item))
+        for i, el in enumerate(column_names):
+            #self.tableWidget.insertColumn(i)
+            self.tableWidget.setHorizontalHeaderItem(i, to_table_item(el))
+
+        # Заполнение таблицы значениями
         for row_number, row_data in enumerate(all_data):
             self.tableWidget.insertRow(row_number)
             for column_number, data in enumerate(row_data):
                 self.tableWidget.setItem(row_number, column_number, QtWidgets.QTableWidgetItem(str(data)))
 
 
+
+
+
+
 def main():
     print("Let's start")
-    testName = "bob"
-    print("asd","asd", f"{testName}")
-
 
     PSQL.main()
 
@@ -122,3 +124,17 @@ def main():
 
 if __name__ == '__main__':
     main()
+
+
+
+# def trash():
+#     self.loadBtn.clicked.connect(self.loadData)
+#     def loadData(self):
+#         cursor.execute('SELECT * FROM Товары;')
+#         all_data = cursor.fetchall()
+#         self.tableWidget.setRowCount(0)
+#         self.tableWidget.setColumnCount(len(all_data[0]))
+#         for row_number, row_data in enumerate(all_data):
+#             self.tableWidget.insertRow(row_number)
+#             for column_number, data in enumerate(row_data):
+#                 self.tableWidget.setItem(row_number, column_number, QtWidgets.QTableWidgetItem(str(data)))

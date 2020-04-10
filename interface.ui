@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>882</width>
-    <height>690</height>
+    <height>852</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -24,43 +24,68 @@
        <attribute name="title">
         <string>Tab 1</string>
        </attribute>
-       <layout class="QFormLayout" name="formLayout">
+       <layout class="QGridLayout" name="gridLayout">
+        <item row="1" column="0" colspan="3">
+         <widget class="QTableWidget" name="tableWidget">
+          <property name="maximumSize">
+           <size>
+            <width>16777215</width>
+            <height>60</height>
+           </size>
+          </property>
+          <property name="rowCount">
+           <number>1</number>
+          </property>
+          <property name="columnCount">
+           <number>5</number>
+          </property>
+          <row/>
+          <column/>
+          <column/>
+          <column/>
+          <column/>
+          <column/>
+         </widget>
+        </item>
+        <item row="2" column="0">
+         <widget class="QComboBox" name="OperTypeBox"/>
+        </item>
+        <item row="3" column="0">
+         <widget class="QComboBox" name="GoodsNameBox"/>
+        </item>
+        <item row="5" column="0">
+         <widget class="QPushButton" name="loadBtn">
+          <property name="text">
+           <string>Load</string>
+          </property>
+         </widget>
+        </item>
         <item row="0" column="0">
          <widget class="QComboBox" name="NameBox"/>
         </item>
-        <item row="0" column="1">
+        <item row="0" column="2">
          <widget class="QLabel" name="KommentTxt">
           <property name="text">
            <string>TextLabel</string>
           </property>
          </widget>
         </item>
-        <item row="2" column="0" colspan="2">
-         <widget class="QTableWidget" name="tableWidget">
-          <property name="rowCount">
-           <number>5</number>
+        <item row="4" column="1">
+         <widget class="QLabel" name="oneCashTxt">
+          <property name="text">
+           <string>TextLabel</string>
           </property>
-          <property name="columnCount">
-           <number>5</number>
-          </property>
-          <row/>
-          <row/>
-          <row/>
-          <row/>
-          <row/>
-          <column/>
-          <column/>
-          <column/>
-          <column/>
-          <column/>
          </widget>
         </item>
-        <item row="3" column="0">
-         <widget class="QPushButton" name="loadBtn">
+        <item row="4" column="2">
+         <widget class="QLabel" name="manyCashTxt">
           <property name="text">
-           <string>Load</string>
+           <string>TextLabel</string>
           </property>
          </widget>
+        </item>
+        <item row="4" column="0">
+         <widget class="QSpinBox" name="amountSpinBox"/>
         </item>
        </layout>
       </widget>
