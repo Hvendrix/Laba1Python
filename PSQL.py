@@ -41,6 +41,9 @@ def main():
         cursor.execute(
             '''INSERT INTO Товары (Название, Цена, Количество) VALUES ('Приора', 20000, 4)'''
         )
+        cursor.execute(
+            '''INSERT INTO Товары (Название, Цена, Количество) VALUES ('Lada', 60000, 2)'''
+        )
         conn.commit()
 
 

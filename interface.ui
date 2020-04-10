@@ -47,45 +47,59 @@
           <column/>
          </widget>
         </item>
-        <item row="2" column="0">
-         <widget class="QComboBox" name="OperTypeBox"/>
-        </item>
-        <item row="3" column="0">
-         <widget class="QComboBox" name="GoodsNameBox"/>
-        </item>
-        <item row="5" column="0">
+        <item row="6" column="0">
          <widget class="QPushButton" name="loadBtn">
           <property name="text">
            <string>Load</string>
           </property>
          </widget>
         </item>
-        <item row="0" column="0">
-         <widget class="QComboBox" name="NameBox"/>
-        </item>
-        <item row="0" column="2">
-         <widget class="QLabel" name="KommentTxt">
-          <property name="text">
-           <string>TextLabel</string>
-          </property>
-         </widget>
-        </item>
         <item row="4" column="1">
          <widget class="QLabel" name="oneCashTxt">
           <property name="text">
-           <string>TextLabel</string>
+           <string>0</string>
           </property>
          </widget>
         </item>
         <item row="4" column="2">
          <widget class="QLabel" name="manyCashTxt">
           <property name="text">
-           <string>TextLabel</string>
+           <string>0</string>
           </property>
          </widget>
         </item>
         <item row="4" column="0">
          <widget class="QSpinBox" name="amountSpinBox"/>
+        </item>
+        <item row="5" column="0">
+         <widget class="QComboBox" name="OperTypeBox"/>
+        </item>
+        <item row="0" column="0">
+         <widget class="QLabel" name="label_2">
+          <property name="text">
+           <string>Введите Имя</string>
+          </property>
+         </widget>
+        </item>
+        <item row="3" column="1">
+         <widget class="QLabel" name="label">
+          <property name="text">
+           <string>Название товара</string>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="1">
+         <widget class="QComboBox" name="NameBox"/>
+        </item>
+        <item row="3" column="0">
+         <widget class="QComboBox" name="GoodsNameBox"/>
+        </item>
+        <item row="3" column="2">
+         <widget class="QLabel" name="amountOnStoreTxt">
+          <property name="text">
+           <string>0</string>
+          </property>
+         </widget>
         </item>
        </layout>
       </widget>

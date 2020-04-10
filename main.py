@@ -1,7 +1,7 @@
 import sys
 import os
 import psycopg2
-from auth import *
+
 
 
 from PyQt5 import QtWidgets, QtCore, QtGui
@@ -11,6 +11,7 @@ import Form3
 import interface
 
 import PSQL
+from auth import *
 
 class ExampleApp(QtWidgets.QMainWindow, Form2.Ui_MainWindow):
     def __init__(self):
@@ -55,27 +56,67 @@ class Interface(QtWidgets.QMainWindow, interface.Ui_MainWindow):
         super().__init__()
         self.setupUi(self)
         self.setNameIntoNameBox()
+        self.setGoodsNameIntoGoodsNameBox()
 
         self.NameBox.currentIndexChanged.connect(self.loadDataFromName)
 
+        self.amountSpinBox.valueChanged.connect(self.changeManyCash)
+
+        self.GoodsNameBox.currentIndexChanged.connect(self.changeOneCash)
+        self.GoodsNameBox.currentIndexChanged.connect(self.changeManyCash)
 
 
 
 
+    def changeOneCash(self):
+        oneName = str(self.GoodsNameBox.currentText())
+        cursor.execute(f"""SELECT Цена, Количество FROM Товары WHERE Название = '{oneName}';""")
+        rows = cursor.fetchall()
+        for row in rows:
+            self.oneCashTxt.setText(str(row[0]))
+            self.amountOnStoreTxt.setText(str(row[1]))
+
+    def changeManyCash(self):
+        print(self.amountSpinBox.value())
+        many = self.amountSpinBox.value()
+        oneName = self.GoodsNameBox.currentText()
+
+        cursor.execute(f"""SELECT Цена, Количество FROM Товары where Название = '{oneName}' """)
+        rows = cursor.fetchall()
+        for row in rows:
+            one = row[0]
+            self.manyCashTxt.setText(str(one * many))
+            self.amountOnStoreTxt.setText(str(row[1]-many))
 
 
 
     def setNameIntoNameBox(self):
-        cursor.execute("SELECT id, Имя from Клиенты")
+        cursor.execute("SELECT id, Имя FROM Клиенты;")
         rows = cursor.fetchall()
         for row in rows:
             self.NameBox.addItem(row[1])
 
+    def setGoodsNameIntoGoodsNameBox(self):
+        cursor.execute("SELECT id, Название FROM Товары;")
+        rows = cursor.fetchall()
+        for row in rows:
+            self.GoodsNameBox.addItem(row[1])
+
+        cursor.execute("SELECT Цена, Количество FROM Товары WHERE id = 1;")
+        rows = cursor.fetchall()
+        for row in rows:
+            self.oneCashTxt.setText(str(row[0]))
+            self.amountOnStoreTxt.setText(str(row[1]))
 
 
-    def setUpText1(self):
-        indexB = self.NameBox.currentText()
-        self.KommentTxt.setText(indexB)
+
+
+
+
+    #
+    # def setUpText1(self):
+    #     indexB = self.NameBox.currentText()
+    #     self.KommentTxt.setText(indexB)
 
 
     def loadDataFromName(self):
