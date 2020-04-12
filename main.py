@@ -58,6 +58,8 @@ class Interface(QtWidgets.QMainWindow, interface.Ui_MainWindow):
         self.setNameIntoNameBox()
         self.setGoodsNameIntoGoodsNameBox()
 
+        self.loadDataFromName()
+
         self.NameBox.currentIndexChanged.connect(self.loadDataFromName)
 
         self.amountSpinBox.valueChanged.connect(self.changeManyCash)
@@ -72,9 +74,8 @@ class Interface(QtWidgets.QMainWindow, interface.Ui_MainWindow):
         oneName = str(self.GoodsNameBox.currentText())
         cursor.execute(f"""SELECT Цена, Количество FROM Товары WHERE Название = '{oneName}';""")
         rows = cursor.fetchall()
-        for row in rows:
-            self.oneCashTxt.setText(str(row[0]))
-            self.amountOnStoreTxt.setText(str(row[1]))
+        self.oneCashTxt.setText(str(rows[0][0]))
+        self.amountOnStoreTxt.setText(str(rows[0][1]))
 
     def changeManyCash(self):
         print(self.amountSpinBox.value())
@@ -83,44 +84,35 @@ class Interface(QtWidgets.QMainWindow, interface.Ui_MainWindow):
 
         cursor.execute(f"""SELECT Цена, Количество FROM Товары where Название = '{oneName}' """)
         rows = cursor.fetchall()
-        for row in rows:
-            one = row[0]
-            self.manyCashTxt.setText(str(one * many))
-            self.amountOnStoreTxt.setText(str(row[1]-many))
+        one = rows[0][0]
+        self.manyCashTxt.setText(str(one * many))
+        self.amountOnStoreTxt.setText(str(rows[0][1]-many))
 
 
 
     def setNameIntoNameBox(self):
-        cursor.execute("SELECT id, Имя FROM Клиенты;")
+        cursor.execute("SELECT Имя FROM Клиенты;")
         rows = cursor.fetchall()
         for row in rows:
-            self.NameBox.addItem(row[1])
+            self.NameBox.addItem(row[0])
 
     def setGoodsNameIntoGoodsNameBox(self):
-        cursor.execute("SELECT id, Название FROM Товары;")
+        cursor.execute("SELECT Название FROM Товары;")
         rows = cursor.fetchall()
         for row in rows:
-            self.GoodsNameBox.addItem(row[1])
+            self.GoodsNameBox.addItem(row[0])
 
         cursor.execute("SELECT Цена, Количество FROM Товары WHERE id = 1;")
         rows = cursor.fetchall()
-        for row in rows:
-            self.oneCashTxt.setText(str(row[0]))
-            self.amountOnStoreTxt.setText(str(row[1]))
+        self.oneCashTxt.setText(str(rows[0][0]))
+        self.amountOnStoreTxt.setText(str(rows[0][1]))
 
-
-
-
-
-
-    #
     # def setUpText1(self):
     #     indexB = self.NameBox.currentText()
     #     self.KommentTxt.setText(indexB)
 
 
     def loadDataFromName(self):
-
         name = self.NameBox.currentText()
         sName = str(name)
         cursor.execute(f'''SELECT Имя, Комментарий, Долг, Max_Кредит FROM Клиенты WHERE Имя = '{sName}';''')
@@ -151,9 +143,17 @@ class Interface(QtWidgets.QMainWindow, interface.Ui_MainWindow):
 def main():
     print("Let's start")
 
+    a = [1, 5, 9, 2]
+    for i, x in enumerate(a):
+        print("test", i, x)
+
+
+    cursor.execute(f'''SELECT Название, Количество FROM Товары''')
+
+    row = cursor.fetchall()
+    print(row)
+
     PSQL.main()
-
-
 
     app = QtWidgets.QApplication(sys.argv)
     window = Interface()
