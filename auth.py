@@ -1,3 +1,3 @@
-loginSql = 'hvendrix'
-passSql = '200915'
-dbnameSql = 'hvendrix'
+loginSql = 'student'
+passSql = '1111'
+dbnameSql = 'Лаба1'

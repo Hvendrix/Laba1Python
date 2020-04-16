@@ -71,12 +71,9 @@ def main():
 
     # createGoods()
     # insertIntoGoods()
-    # #selectFromGoods()
-    #
-    #
-    #
     # createClients()
     # insertIntoClients()
 
+    # selectFromGoods()
     cursor.close()
     conn.close()

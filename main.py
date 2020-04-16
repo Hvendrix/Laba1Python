@@ -2,47 +2,13 @@ import sys
 import os
 import psycopg2
 
-
-
 from PyQt5 import QtWidgets, QtCore, QtGui
-
-import Form2
-import Form3
 import interface
+import Barter
 
 import PSQL
 from auth import *
 
-class ExampleApp(QtWidgets.QMainWindow, Form2.Ui_MainWindow):
-    def __init__(self):
-        # Это здесь нужно для доступа к переменным, методам
-        # и т.д. в файле Form2.py
-        super().__init__()
-        self.setupUi(self)  # Это нужно для инициализации нашего дизайна
-        self.btnBrowse.clicked.connect(self.browse_folder)
-
-    def browse_folder(self):
-        self.listWidget.clear()  # На случай, если в списке уже есть элементы
-        directory = QtWidgets.QFileDialog.getExistingDirectory(self, "Выберите папку")
-        # открыть диалог выбора директории и установить значение переменной
-        # равной пути к выбранной директории
-
-        if directory:  # не продолжать выполнение, если пользователь не выбрал директорию
-            for file_name in os.listdir(directory):  # для каждого файла в директории
-                self.listWidget.addItem(file_name)  # добавить файл в listWidget
-
-class ExampleApp3(QtWidgets.QMainWindow, Form3.Ui_MainWindow):
-    def __init__(self):
-        super().__init__()
-        self.setupUi(self)
-        self.txtBtn.clicked.connect(self.setUpText1)
-        self.label.setText("Hello")
-        self.label.setStyleSheet("color: rgb(28, 43, 255);")
-        self.comboBox.addItem("asdasd")
-        self.comboBox.addItem("qweqweqwe")
-
-    def setUpText1(self):
-        self.label.setText("qwertasd")
 
 # подключаем бд
 conn = psycopg2.connect(dbname=dbnameSql, user=loginSql,
@@ -68,6 +34,16 @@ class Interface(QtWidgets.QMainWindow, interface.Ui_MainWindow):
         self.GoodsNameBox.currentIndexChanged.connect(self.changeOneCash)
         self.GoodsNameBox.currentIndexChanged.connect(self.changeManyCash)
         self.GoodsNameBox.currentIndexChanged.connect(self.warningStoreCount)
+
+        self.nextBtn.clicked.connect(self.nextBtnPressed)
+
+
+
+    def nextBtnPressed(self):
+        window2 = Barter()
+        window2.setModal(True)
+        # window2.show()
+        window2.exec_()
 
 
 
@@ -145,6 +121,12 @@ class Interface(QtWidgets.QMainWindow, interface.Ui_MainWindow):
             self.tableWidget.insertRow(row_number)
             for column_number, data in enumerate(row_data):
                 self.tableWidget.setItem(row_number, column_number, QtWidgets.QTableWidgetItem(str(data)))
+
+
+class Barter(QtWidgets.QDialog, Barter.Ui_Dialog):
+    def __init__(self):
+        super().__init__()
+        self.setupUi(self)
 
 
 
