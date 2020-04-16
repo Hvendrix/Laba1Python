@@ -63,9 +63,11 @@ class Interface(QtWidgets.QMainWindow, interface.Ui_MainWindow):
         self.NameBox.currentIndexChanged.connect(self.loadDataFromName)
 
         self.amountSpinBox.valueChanged.connect(self.changeManyCash)
+        self.amountSpinBox.valueChanged.connect(self.warningStoreCount)
 
         self.GoodsNameBox.currentIndexChanged.connect(self.changeOneCash)
         self.GoodsNameBox.currentIndexChanged.connect(self.changeManyCash)
+        self.GoodsNameBox.currentIndexChanged.connect(self.warningStoreCount)
 
 
 
@@ -87,6 +89,15 @@ class Interface(QtWidgets.QMainWindow, interface.Ui_MainWindow):
         one = rows[0][0]
         self.manyCashTxt.setText(str(one * many))
         self.amountOnStoreTxt.setText(str(rows[0][1]-many))
+
+    def warningStoreCount(self):
+        count = str(self.amountOnStoreTxt.text())
+        if int(count) < 0:
+            self.warningTxt.setText("Внимание!!! \n Вы заказываете больше товаров, \n чем есть на складе \n заказ выведет ошибку")
+        else:
+            self.warningTxt.setText("ok")
+
+
 
 
 
@@ -142,6 +153,7 @@ class Interface(QtWidgets.QMainWindow, interface.Ui_MainWindow):
 
 def main():
     print("Let's start")
+    PSQL.main()
 
     a = [1, 5, 9, 2]
     for i, x in enumerate(a):
@@ -153,7 +165,7 @@ def main():
     row = cursor.fetchall()
     print(row)
 
-    PSQL.main()
+
 
     app = QtWidgets.QApplication(sys.argv)
     window = Interface()

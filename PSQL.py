@@ -69,14 +69,14 @@ def main():
 
 
 
-    #createGoods()
-    #insertIntoGoods()
-    #selectFromGoods()
-
-
-
-    #createClients()
-    #insertIntoClients()
+    # createGoods()
+    # insertIntoGoods()
+    # #selectFromGoods()
+    #
+    #
+    #
+    # createClients()
+    # insertIntoClients()
 
     cursor.close()
     conn.close()
