@@ -25,7 +25,7 @@
       </property>
       <widget class="QWidget" name="tab">
        <attribute name="title">
-        <string>Tab 1</string>
+        <string>Оформление заказа</string>
        </attribute>
        <layout class="QGridLayout" name="gridLayout">
         <item row="1" column="0" colspan="3">
@@ -140,8 +140,13 @@
       </widget>
       <widget class="QWidget" name="tab_2">
        <attribute name="title">
-        <string>Tab 2</string>
+        <string>Все заказы</string>
        </attribute>
+       <layout class="QGridLayout" name="gridLayout_2">
+        <item row="0" column="0">
+         <widget class="QTableWidget" name="allOrdersTable"/>
+        </item>
+       </layout>
       </widget>
      </widget>
     </item>

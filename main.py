@@ -23,6 +23,7 @@ class Interface(QtWidgets.QMainWindow, interface.Ui_MainWindow):
         self.setupUi(self)
         self.setNameIntoNameBox()
         self.setGoodsNameIntoGoodsNameBox()
+        self.setOperIntoOperTypeBox()
 
         self.loadDataFromName()
 
@@ -39,11 +40,31 @@ class Interface(QtWidgets.QMainWindow, interface.Ui_MainWindow):
 
 
 
+
+
     def nextBtnPressed(self):
-        window2 = Barter()
-        window2.setModal(True)
-        # window2.show()
-        window2.exec_()
+        x = 3
+        if x == 3:
+            print("go out")
+            return
+        NameKlient = str(self.NameBox.currentText())
+        NameGoods = str(self.GoodsNameBox.currentText())
+        countOrder = self.amountSpinBox.value()
+        allCash = int(self.manyCashTxt.text())
+
+        cursor.execute(
+            f"""INSERT INTO Заказы (id_клиента, id_товара, Количество_купленного, Общая_цена) VALUES ((
+            SELECT id FROM Клиенты WHERE Имя='{NameKlient}'), (SELECT id FROM Товары WHERE Название='{NameGoods}'), 
+            {countOrder}, {allCash}); """
+        )
+        conn.commit()
+
+        self.loadDataForOrders()
+
+        # window2 = Barter()
+        # window2.setModal(True)
+        # # window2.show()
+        # window2.exec_()
 
 
 
@@ -76,6 +97,12 @@ class Interface(QtWidgets.QMainWindow, interface.Ui_MainWindow):
 
 
 
+    def setOperIntoOperTypeBox(self):
+        self.OperTypeBox.addItem("Наличный расчет")
+        self.OperTypeBox.addItem("Безналичный расчет")
+        self.OperTypeBox.addItem("Кредит")
+        self.OperTypeBox.addItem("Бартер")
+        self.OperTypeBox.addItem("Взаимозачет")
 
     def setNameIntoNameBox(self):
         cursor.execute("SELECT Имя FROM Клиенты;")
@@ -121,6 +148,31 @@ class Interface(QtWidgets.QMainWindow, interface.Ui_MainWindow):
             self.tableWidget.insertRow(row_number)
             for column_number, data in enumerate(row_data):
                 self.tableWidget.setItem(row_number, column_number, QtWidgets.QTableWidgetItem(str(data)))
+
+    def loadDataForOrders(self):
+        cursor.execute(
+            f'''SELECT O.id, K.Имя, G.Название, O.Количество_купленного, O.Общая_цена
+            FROM Заказы AS O, Товары AS G, Клиенты AS K WHERE O.id_клиента=K.id AND 
+            O.id_товара=G.id;''')
+        all_data = cursor.fetchall()
+        self.allOrdersTable.setRowCount(0)
+        self.allOrdersTable.setColumnCount(len(all_data[0]))
+
+
+        # Названия для столбцов
+        column_names = ['id', 'Заказчик', 'Товар', 'Количество', 'Общая_цена']
+        def to_table_item(item):
+            return QtWidgets.QTableWidgetItem(str(item))
+        for i, el in enumerate(column_names):
+            #self.tableWidget.insertColumn(i)
+            self.allOrdersTable.setHorizontalHeaderItem(i, to_table_item(el))
+
+        # Заполнение таблицы значениями
+        for row_number, row_data in enumerate(all_data):
+            self.allOrdersTable.insertRow(row_number)
+            for column_number, data in enumerate(row_data):
+                self.allOrdersTable.setItem(row_number, column_number, QtWidgets.QTableWidgetItem(str(data)))
+
 
 
 class Barter(QtWidgets.QDialog, Barter.Ui_Dialog):

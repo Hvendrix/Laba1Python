@@ -24,6 +24,13 @@ def main():
         )
         conn.commit()
 
+    def createOrders():
+        cursor.execute(
+            '''CREATE TABLE Заказы (id serial PRIMARY KEY, id_клиента INT REFERENCES Клиенты (id) ON DELETE CASCADE, 
+            id_товара INT REFERENCES Товары (id) ON DELETE CASCADE, Количество_купленного INT, Общая_цена INT); '''
+        )
+        conn.commit()
+
 
     def insertIntoClients():
 
@@ -73,7 +80,7 @@ def main():
     # insertIntoGoods()
     # createClients()
     # insertIntoClients()
-
+    # createOrders()
     # selectFromGoods()
     cursor.close()
     conn.close()
