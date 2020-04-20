@@ -40,6 +40,7 @@ class Ui_MainWindow(object):
         self.manyCashTxt.setObjectName("manyCashTxt")
         self.gridLayout.addWidget(self.manyCashTxt, 4, 2, 1, 1)
         self.amountSpinBox = QtWidgets.QSpinBox(self.tab)
+        self.amountSpinBox.setMinimum(1)
         self.amountSpinBox.setObjectName("amountSpinBox")
         self.gridLayout.addWidget(self.amountSpinBox, 4, 0, 1, 1)
         self.OperTypeBox = QtWidgets.QComboBox(self.tab)

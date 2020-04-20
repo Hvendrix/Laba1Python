@@ -78,7 +78,11 @@
          </widget>
         </item>
         <item row="4" column="0">
-         <widget class="QSpinBox" name="amountSpinBox"/>
+         <widget class="QSpinBox" name="amountSpinBox">
+          <property name="minimum">
+           <number>1</number>
+          </property>
+         </widget>
         </item>
         <item row="5" column="0">
          <widget class="QComboBox" name="OperTypeBox"/>

@@ -4,7 +4,7 @@ import psycopg2
 
 from PyQt5 import QtWidgets, QtCore, QtGui
 import interface
-import Barter
+import warning
 
 import PSQL
 from auth import *
@@ -40,17 +40,48 @@ class Interface(QtWidgets.QMainWindow, interface.Ui_MainWindow):
 
 
 
+    def warning(self, code):
+
+        window2 = Warning()
+        window2.setModal(True)
+        # window2.show()
+        window2.exec_()
+
+
 
 
     def nextBtnPressed(self):
-        x = 3
-        if x == 3:
+        warnControl = self.warningTxt.text()
+        if warnControl != "ok":
             print("go out")
+            self.warning(1)
             return
+
         NameKlient = str(self.NameBox.currentText())
         NameGoods = str(self.GoodsNameBox.currentText())
         countOrder = self.amountSpinBox.value()
         allCash = int(self.manyCashTxt.text())
+        OperType = str(self.OperTypeBox.currentText())
+
+
+        cursor.execute(
+            f'''SELECT Долг, Max_Кредит FROM Клиенты WHERE Имя = '{NameKlient}';'''
+        )
+        dolgAndMax = cursor.fetchall()
+
+
+
+
+
+        if OperType == "Кредит":
+            if (dolgAndMax[0][0] + allCash) > dolgAndMax[0][1]:
+                self.warning(1)
+                print("warning")
+                return
+            cursor.execute(
+                f'''UPDATE Клиенты SET Долг = Долг + {allCash} WHERE Имя='{NameKlient}';'''
+            )
+            print("долг")
 
         cursor.execute(
             f"""INSERT INTO Заказы (id_клиента, id_товара, Количество_купленного, Общая_цена) VALUES ((
@@ -59,12 +90,10 @@ class Interface(QtWidgets.QMainWindow, interface.Ui_MainWindow):
         )
         conn.commit()
 
+
         self.loadDataForOrders()
 
-        # window2 = Barter()
-        # window2.setModal(True)
-        # # window2.show()
-        # window2.exec_()
+
 
 
 
@@ -151,7 +180,7 @@ class Interface(QtWidgets.QMainWindow, interface.Ui_MainWindow):
 
     def loadDataForOrders(self):
         cursor.execute(
-            f'''SELECT O.id, K.Имя, G.Название, O.Количество_купленного, O.Общая_цена
+            f'''SELECT O.id, K.Имя, K.Долг, G.Название, O.Количество_купленного, O.Общая_цена
             FROM Заказы AS O, Товары AS G, Клиенты AS K WHERE O.id_клиента=K.id AND 
             O.id_товара=G.id;''')
         all_data = cursor.fetchall()
@@ -160,7 +189,7 @@ class Interface(QtWidgets.QMainWindow, interface.Ui_MainWindow):
 
 
         # Названия для столбцов
-        column_names = ['id', 'Заказчик', 'Товар', 'Количество', 'Общая_цена']
+        column_names = ['id', 'Заказчик', 'Долг', 'Товар', 'Количество', 'Общая_цена']
         def to_table_item(item):
             return QtWidgets.QTableWidgetItem(str(item))
         for i, el in enumerate(column_names):
@@ -175,10 +204,14 @@ class Interface(QtWidgets.QMainWindow, interface.Ui_MainWindow):
 
 
 
-class Barter(QtWidgets.QDialog, Barter.Ui_Dialog):
+class Warning(QtWidgets.QDialog, warning.Ui_Dialog):
     def __init__(self):
         super().__init__()
         self.setupUi(self)
+        self.warnOkBtn.clicked.connect(self.exit_warn)
+
+    def exit_warn(self):
+        self.close()
 
 
 

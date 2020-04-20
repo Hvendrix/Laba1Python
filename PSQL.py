@@ -46,10 +46,10 @@ def main():
     def insertIntoGoods():
 
         cursor.execute(
-            '''INSERT INTO Товары (Название, Цена, Количество) VALUES ('Приора', 20000, 4)'''
+            '''INSERT INTO Товары (Название, Цена, Количество) VALUES ('Ноутбук', 200, 4)'''
         )
         cursor.execute(
-            '''INSERT INTO Товары (Название, Цена, Количество) VALUES ('Lada', 60000, 2)'''
+            '''INSERT INTO Товары (Название, Цена, Количество) VALUES ('Пк', 600, 2)'''
         )
         conn.commit()
 
@@ -75,12 +75,24 @@ def main():
         print("Operation done successfully")
 
 
+    def delete_all():
+        cursor.execute("DROP TABLE Клиенты, Товары, Заказы;")
+        conn.commit()
+
+
 
     # createGoods()
     # insertIntoGoods()
     # createClients()
     # insertIntoClients()
     # createOrders()
+
+    # delete_all()
+
     # selectFromGoods()
+
+
+
+
     cursor.close()
     conn.close()

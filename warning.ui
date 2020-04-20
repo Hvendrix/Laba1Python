@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>Dialog</class>
+ <widget class="QDialog" name="Dialog">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>400</width>
+    <height>300</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Dialog</string>
+  </property>
+  <widget class="QLabel" name="wrnTxt">
+   <property name="geometry">
+    <rect>
+     <x>130</x>
+     <y>80</y>
+     <width>161</width>
+     <height>81</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Вы ввели 
+не корректное 
+значения</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="warnOkBtn">
+   <property name="geometry">
+    <rect>
+     <x>140</x>
+     <y>190</y>
+     <width>117</width>
+     <height>31</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Вернуться</string>
+   </property>
+  </widget>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
