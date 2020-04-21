@@ -11,7 +11,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
-        MainWindow.resize(882, 852)
+        MainWindow.resize(1052, 852)
         self.centralwidget = QtWidgets.QWidget(MainWindow)
         self.centralwidget.setObjectName("centralwidget")
         self.verticalLayout = QtWidgets.QVBoxLayout(self.centralwidget)
@@ -71,8 +71,9 @@ class Ui_MainWindow(object):
         self.nextBtn.setObjectName("nextBtn")
         self.gridLayout.addWidget(self.nextBtn, 6, 1, 1, 1)
         self.warningTxt = QtWidgets.QLabel(self.tab)
+        self.warningTxt.setStyleSheet("color: rgb(204, 0, 0);")
         self.warningTxt.setObjectName("warningTxt")
-        self.gridLayout.addWidget(self.warningTxt, 3, 3, 1, 1)
+        self.gridLayout.addWidget(self.warningTxt, 3, 3, 2, 1)
         self.tabWidget.addTab(self.tab, "")
         self.tab_2 = QtWidgets.QWidget()
         self.tab_2.setObjectName("tab_2")
@@ -87,7 +88,7 @@ class Ui_MainWindow(object):
         self.verticalLayout.addWidget(self.tabWidget)
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QtWidgets.QMenuBar(MainWindow)
-        self.menubar.setGeometry(QtCore.QRect(0, 0, 882, 28))
+        self.menubar.setGeometry(QtCore.QRect(0, 0, 1052, 28))
         self.menubar.setObjectName("menubar")
         MainWindow.setMenuBar(self.menubar)
         self.statusbar = QtWidgets.QStatusBar(MainWindow)
@@ -108,7 +109,7 @@ class Ui_MainWindow(object):
         self.label.setText(_translate("MainWindow", "Название товара"))
         self.amountOnStoreTxt.setText(_translate("MainWindow", "0"))
         self.nextBtn.setText(_translate("MainWindow", "Продолжить"))
-        self.warningTxt.setText(_translate("MainWindow", "<html><head/><body><p><br/></p></body></html>"))
+        self.warningTxt.setText(_translate("MainWindow", "<html><head/><body><p><span style=\" font-weight:600; color:#cc0000;\"><br/></span></p></body></html>"))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab), _translate("MainWindow", "Оформление заказа"))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_2), _translate("MainWindow", "Все заказы"))
 

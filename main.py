@@ -5,7 +5,7 @@ import psycopg2
 from PyQt5 import QtWidgets, QtCore, QtGui
 import interface
 import warning
-
+from PyQt5.QtWidgets import QHeaderView
 import PSQL
 from auth import *
 
@@ -25,6 +25,8 @@ class Interface(QtWidgets.QMainWindow, interface.Ui_MainWindow):
         self.setGoodsNameIntoGoodsNameBox()
         self.setOperIntoOperTypeBox()
 
+        self.warningTxt.setText("ok")
+
         self.loadDataFromName()
 
         self.NameBox.currentIndexChanged.connect(self.loadDataFromName)
@@ -37,6 +39,14 @@ class Interface(QtWidgets.QMainWindow, interface.Ui_MainWindow):
         self.GoodsNameBox.currentIndexChanged.connect(self.warningStoreCount)
 
         self.nextBtn.clicked.connect(self.nextBtnPressed)
+
+        self.tableWidget.horizontalHeader().setMinimumSectionSize(75)
+        self.tableWidget.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
+
+        self.allOrdersTable.horizontalHeader().setMinimumSectionSize(75)
+        self.allOrdersTable.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
+
+
 
 
 
@@ -56,6 +66,7 @@ class Interface(QtWidgets.QMainWindow, interface.Ui_MainWindow):
             print("go out")
             self.warning(1)
             return
+
 
         NameKlient = str(self.NameBox.currentText())
         NameGoods = str(self.GoodsNameBox.currentText())
@@ -119,7 +130,7 @@ class Interface(QtWidgets.QMainWindow, interface.Ui_MainWindow):
     def warningStoreCount(self):
         count = str(self.amountOnStoreTxt.text())
         if int(count) < 0:
-            self.warningTxt.setText("Внимание!!! \n Вы заказываете больше товаров, \n чем есть на складе \n заказ выведет ошибку")
+            self.warningTxt.setText("Вы заказываете больше, \nтоваров чем есть на складе \nзаказ выведет ошибку!!!")
         else:
             self.warningTxt.setText("ok")
 
