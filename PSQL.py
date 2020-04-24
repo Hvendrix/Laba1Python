@@ -9,12 +9,20 @@ def main():
                             password=passSql, host='localhost', port="5432")
     cursor = conn.cursor()
 
-
+    """
+    • общий счет покупок клиента (сумма всех покупок)
+    • текущий счет клиента (деньги на счету фирмы для покупок);
+    • потолок кредита (кредитный лимит, который не изменяется);
+    • текущий долг клиента;
+    • остаток кредита (разница между потолком кредита и текущим долгом);
+    • комментарий (о причине долга клиента, его надежности и т.п.).
+    """
 
     def createClients():
         cursor.execute(
             '''CREATE TABLE Клиенты (id serial PRIMARY KEY, Имя varchar(50), Фамилия varchar(50), 
-            Комментарий varchar (25), Долг int, Max_Кредит int);'''
+            Комментарий varchar (25), Долг int, Потолок_кредита int, Остаток_кредита int, Общий_счет_покупок int,
+            Общий_счет_клиента int);'''
         )
         conn.commit()
 
@@ -32,16 +40,14 @@ def main():
         conn.commit()
 
 
-    def insertIntoClients():
+    def insertIntoClients(Name, LName, Komment, Dolg, Potolok, Ostatok, Cash, Schet):
 
         cursor.execute(
-            '''INSERT INTO Клиенты (Имя, Фамилия, Комментарий, Долг, Max_Кредит) VALUES ('Иван', 'Иванов', 'надежен', 2000, 3000)'''
+            f'''INSERT INTO Клиенты (Имя, Фамилия, Комментарий, Долг, Потолок_кредита,
+            Остаток_кредита, Общий_счет_покупок, Общий_счет_клиента) 
+            VALUES ('{Name}', '{LName}', '{Komment}', {Dolg}, {Potolok}, {Ostatok}, {Cash}, {Schet})'''
         )
 
-        cursor.execute(
-            '''INSERT INTO Клиенты (Имя, Фамилия, Комментарий, Долг, Max_Кредит) VALUES ('Денис', 'Сидоров', 'надежен', 4000, 9000)'''
-        )
-        conn.commit()
 
     def insertIntoGoods():
 
@@ -84,7 +90,8 @@ def main():
     # createGoods()
     # insertIntoGoods()
     # createClients()
-    # insertIntoClients()
+    # insertIntoClients('Иван', 'Иванов', 'надежен', 2000, 30000, 30000, 0, 20000)
+    # insertIntoClients('Денис', 'Сидоров', 'надежен', 0, 9000, 9000, 0, 6000)
     # createOrders()
 
     # delete_all()

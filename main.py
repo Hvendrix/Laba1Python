@@ -76,7 +76,7 @@ class Interface(QtWidgets.QMainWindow, interface.Ui_MainWindow):
 
 
         cursor.execute(
-            f'''SELECT Долг, Max_Кредит FROM Клиенты WHERE Имя = '{NameKlient}';'''
+            f'''SELECT Долг, Потолок_кредита FROM Клиенты WHERE Имя = '{NameKlient}';'''
         )
         dolgAndMax = cursor.fetchall()
 
@@ -169,7 +169,7 @@ class Interface(QtWidgets.QMainWindow, interface.Ui_MainWindow):
     def loadDataFromName(self):
         name = self.NameBox.currentText()
         sName = str(name)
-        cursor.execute(f'''SELECT Имя, Комментарий, Долг, Max_Кредит FROM Клиенты WHERE Имя = '{sName}';''')
+        cursor.execute(f'''SELECT Имя, Комментарий, Долг, Потолок_кредита FROM Клиенты WHERE Имя = '{sName}';''')
         all_data = cursor.fetchall()
         self.tableWidget.setRowCount(0)
         self.tableWidget.setColumnCount(len(all_data[0]))
