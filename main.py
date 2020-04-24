@@ -27,9 +27,9 @@ class Interface(QtWidgets.QMainWindow, interface.Ui_MainWindow):
 
         self.warningTxt.setText("ok")
 
-        self.loadDataFromName()
+        self.initLoadDataFromName()
 
-        self.NameBox.currentIndexChanged.connect(self.loadDataFromName)
+        self.NameBox.currentIndexChanged.connect(self.initLoadDataFromName)
 
         self.amountSpinBox.valueChanged.connect(self.changeManyCash)
         self.amountSpinBox.valueChanged.connect(self.warningStoreCount)
@@ -37,18 +37,20 @@ class Interface(QtWidgets.QMainWindow, interface.Ui_MainWindow):
         self.GoodsNameBox.currentIndexChanged.connect(self.changeOneCash)
         self.GoodsNameBox.currentIndexChanged.connect(self.changeManyCash)
         self.GoodsNameBox.currentIndexChanged.connect(self.warningStoreCount)
+        self.OperTypeBox.currentIndexChanged.connect(self.changeManyCash)
 
         self.nextBtn.clicked.connect(self.nextBtnPressed)
+        self.nextBtn.clicked.connect(self.initLoadDataFromName)
+        self.nextBtn.clicked.connect(self.changeManyCash)
+        self.nextBtn.clicked.connect(self.warningStoreCount)
+        self.delBtn.clicked.connect(self.delete_all)
+        self.delBtn.clicked.connect(self.initLoadDataFromName)
 
         self.tableWidget.horizontalHeader().setMinimumSectionSize(75)
         self.tableWidget.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
 
         self.allOrdersTable.horizontalHeader().setMinimumSectionSize(75)
         self.allOrdersTable.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
-
-
-
-
 
     def warning(self, code):
 
@@ -57,7 +59,12 @@ class Interface(QtWidgets.QMainWindow, interface.Ui_MainWindow):
         # window2.show()
         window2.exec_()
 
-
+    def delete_all(self):
+        cursor.execute(
+            f"""DROP TABLE Заказы, Клиенты, Товары;"""
+        )
+        conn.commit()
+        PSQL.main()
 
 
     def nextBtnPressed(self):
@@ -76,7 +83,7 @@ class Interface(QtWidgets.QMainWindow, interface.Ui_MainWindow):
 
 
         cursor.execute(
-            f'''SELECT Долг, Потолок_кредита FROM Клиенты WHERE Имя = '{NameKlient}';'''
+            f'''SELECT Долг, Потолок_кредита, Общий_счет_клиента FROM Клиенты WHERE Имя = '{NameKlient}';'''
         )
         dolgAndMax = cursor.fetchall()
 
@@ -90,9 +97,38 @@ class Interface(QtWidgets.QMainWindow, interface.Ui_MainWindow):
                 print("warning")
                 return
             cursor.execute(
-                f'''UPDATE Клиенты SET Долг = Долг + {allCash} WHERE Имя='{NameKlient}';'''
+                f'''UPDATE Клиенты SET Долг = Долг + {allCash}, Остаток_кредита = Остаток_кредита - {allCash} WHERE Имя='{NameKlient}';'''
             )
             print("долг")
+            conn.commit()
+
+        if OperType == "Безналичный расчет":
+            if (dolgAndMax[0][2] < allCash):
+                self.warning(1)
+                return
+            cursor.execute(
+                f"""UPDATE Клиенты SET Общий_счет_клиента = Общий_счет_клиента - {allCash} WHERE Имя = '{NameKlient}';"""
+            )
+            conn.commit()
+
+        if OperType == "Взаимозачет":
+            countOrder = - countOrder
+            cursor.execute(
+                f'''UPDATE Клиенты SET Долг = Долг - {allCash}, Остаток_кредита = Остаток_кредита + {allCash} WHERE Имя='{NameKlient}';'''
+            )
+            conn.commit()
+
+            allCash = 0
+
+        cursor.execute(
+            f"""UPDATE Клиенты SET Общий_счет_покупок = Общий_счет_покупок + {allCash} WHERE Имя = '{NameKlient}';"""
+        )
+        conn.commit()
+
+        cursor.execute(
+            f"""UPDATE Товары SET Количество = Количество - {countOrder} WHERE Название = '{NameGoods}';"""
+        )
+        conn.commit()
 
         cursor.execute(
             f"""INSERT INTO Заказы (id_клиента, id_товара, Количество_купленного, Общая_цена) VALUES ((
@@ -102,12 +138,9 @@ class Interface(QtWidgets.QMainWindow, interface.Ui_MainWindow):
         conn.commit()
 
 
+
+
         self.loadDataForOrders()
-
-
-
-
-
 
     def changeOneCash(self):
         oneName = str(self.GoodsNameBox.currentText())
@@ -126,6 +159,8 @@ class Interface(QtWidgets.QMainWindow, interface.Ui_MainWindow):
         one = rows[0][0]
         self.manyCashTxt.setText(str(one * many))
         self.amountOnStoreTxt.setText(str(rows[0][1]-many))
+        if self.OperTypeBox.currentText() == "Взаимозачет":
+            self.amountOnStoreTxt.setText(str(rows[0][1] + many))
 
     def warningStoreCount(self):
         count = str(self.amountOnStoreTxt.text())
@@ -133,9 +168,6 @@ class Interface(QtWidgets.QMainWindow, interface.Ui_MainWindow):
             self.warningTxt.setText("Вы заказываете больше, \nтоваров чем есть на складе \nзаказ выведет ошибку!!!")
         else:
             self.warningTxt.setText("ok")
-
-
-
 
     def setOperIntoOperTypeBox(self):
         self.OperTypeBox.addItem("Наличный расчет")
@@ -160,23 +192,27 @@ class Interface(QtWidgets.QMainWindow, interface.Ui_MainWindow):
         rows = cursor.fetchall()
         self.oneCashTxt.setText(str(rows[0][0]))
         self.amountOnStoreTxt.setText(str(rows[0][1]))
+        self.manyCashTxt.setText(str(rows[0][0]))
 
     # def setUpText1(self):
     #     indexB = self.NameBox.currentText()
     #     self.KommentTxt.setText(indexB)
 
 
-    def loadDataFromName(self):
+    def initLoadDataFromName(self):
         name = self.NameBox.currentText()
         sName = str(name)
-        cursor.execute(f'''SELECT Имя, Комментарий, Долг, Потолок_кредита FROM Клиенты WHERE Имя = '{sName}';''')
+        cursor.execute(
+            f'''SELECT Имя, Комментарий, Долг, Потолок_кредита,
+            Остаток_кредита, Общий_счет_покупок, Общий_счет_клиента FROM Клиенты WHERE Имя = '{sName}';'''
+        )
         all_data = cursor.fetchall()
         self.tableWidget.setRowCount(0)
         self.tableWidget.setColumnCount(len(all_data[0]))
 
 
         # Названия для столбцов
-        column_names = ['Имя', 'Комментарий', 'Долг', 'Макс. кредит']
+        column_names = ['Имя', 'Комментарий', 'Долг', 'Потолок_кредита',  'Остаток_кредита', 'Общий_счет_покупок', 'Общий_счет_клиента']
         def to_table_item(item):
             return QtWidgets.QTableWidgetItem(str(item))
         for i, el in enumerate(column_names):
@@ -225,13 +261,9 @@ class Warning(QtWidgets.QDialog, warning.Ui_Dialog):
         self.close()
 
 
-
-
-
-
 def main():
     print("Let's start")
-    PSQL.main()
+    # PSQL.main()
 
     a = [1, 5, 9, 2]
     for i, x in enumerate(a):

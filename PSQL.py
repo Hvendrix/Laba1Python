@@ -52,10 +52,10 @@ def main():
     def insertIntoGoods():
 
         cursor.execute(
-            '''INSERT INTO Товары (Название, Цена, Количество) VALUES ('Ноутбук', 200, 4)'''
+            '''INSERT INTO Товары (Название, Цена, Количество) VALUES ('Ноутбук', 200, 40)'''
         )
         cursor.execute(
-            '''INSERT INTO Товары (Название, Цена, Количество) VALUES ('Пк', 600, 2)'''
+            '''INSERT INTO Товары (Название, Цена, Количество) VALUES ('Пк', 600, 22)'''
         )
         conn.commit()
 
@@ -82,19 +82,19 @@ def main():
 
 
     def delete_all():
-        cursor.execute("DROP TABLE Клиенты, Товары, Заказы;")
+        cursor.execute("DROP TABLE Заказы, Клиенты, Товары;")
         conn.commit()
 
-
-
-    # createGoods()
-    # insertIntoGoods()
-    # createClients()
-    # insertIntoClients('Иван', 'Иванов', 'надежен', 2000, 30000, 30000, 0, 20000)
-    # insertIntoClients('Денис', 'Сидоров', 'надежен', 0, 9000, 9000, 0, 6000)
-    # createOrders()
-
     # delete_all()
+
+    createGoods()
+    insertIntoGoods()
+    createClients()
+    insertIntoClients('Иван', 'Иванов', 'надежен', 2000, 30000, 28000, 0, 20000)
+    insertIntoClients('Денис', 'Сидоров', 'надежен', 0, 9000, 9000, 0, 6000)
+    createOrders()
+
+
 
     # selectFromGoods()
 
@@ -103,3 +103,5 @@ def main():
 
     cursor.close()
     conn.close()
+
+
