@@ -18,18 +18,26 @@
     <item>
      <widget class="QTabWidget" name="tabWidget">
       <property name="styleSheet">
-       <string notr="true">background-color: rgb(186, 247, 247);</string>
+       <string notr="true">background-color: rgb(186, 247, 247);
+</string>
       </property>
       <property name="currentIndex">
-       <number>0</number>
+       <number>1</number>
       </property>
       <widget class="QWidget" name="tab">
+       <property name="styleSheet">
+        <string notr="true">background-color: rgb(36, 88, 122);</string>
+       </property>
        <attribute name="title">
         <string>Оформление заказа</string>
        </attribute>
        <layout class="QGridLayout" name="gridLayout">
         <item row="4" column="1">
          <widget class="QLabel" name="label_4">
+          <property name="styleSheet">
+           <string notr="true">
+background-color: rgb(101, 166, 209);</string>
+          </property>
           <property name="text">
            <string>Цена за одну штуку</string>
           </property>
@@ -37,23 +45,41 @@
         </item>
         <item row="4" column="0">
          <widget class="QSpinBox" name="amountSpinBox">
+          <property name="styleSheet">
+           <string notr="true">
+background-color: #FFA200;</string>
+          </property>
           <property name="minimum">
            <number>1</number>
           </property>
          </widget>
         </item>
         <item row="5" column="0">
-         <widget class="QComboBox" name="OperTypeBox"/>
+         <widget class="QComboBox" name="OperTypeBox">
+          <property name="styleSheet">
+           <string notr="true">
+background-color: rgb(101, 166, 209);</string>
+          </property>
+         </widget>
         </item>
         <item row="0" column="0">
          <widget class="QLabel" name="label_2">
+          <property name="styleSheet">
+           <string notr="true">
+background-color: rgb(101, 166, 209);</string>
+          </property>
           <property name="text">
            <string>Введите Имя</string>
           </property>
          </widget>
         </item>
         <item row="0" column="1">
-         <widget class="QComboBox" name="NameBox"/>
+         <widget class="QComboBox" name="NameBox">
+          <property name="styleSheet">
+           <string notr="true">
+background-color: rgb(101, 166, 209);</string>
+          </property>
+         </widget>
         </item>
         <item row="3" column="3">
          <widget class="QLabel" name="amountOnStoreTxt">
@@ -68,6 +94,10 @@
             <width>100</width>
             <height>0</height>
            </size>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">
+background-color: #FFA200;</string>
           </property>
           <property name="text">
            <string>0</string>
@@ -88,6 +118,10 @@
             <height>60</height>
            </size>
           </property>
+          <property name="styleSheet">
+           <string notr="true">
+background-color: rgb(101, 166, 209);</string>
+          </property>
           <property name="rowCount">
            <number>1</number>
           </property>
@@ -104,6 +138,10 @@
         </item>
         <item row="4" column="2">
          <widget class="QLabel" name="oneCashTxt">
+          <property name="styleSheet">
+           <string notr="true">
+background-color: #FFA200;</string>
+          </property>
           <property name="text">
            <string>0</string>
           </property>
@@ -111,13 +149,22 @@
         </item>
         <item row="6" column="0">
          <widget class="QPushButton" name="nextBtn">
+          <property name="styleSheet">
+           <string notr="true">
+background-color: #FFA200;</string>
+          </property>
           <property name="text">
            <string>Продолжить</string>
           </property>
          </widget>
         </item>
         <item row="3" column="1">
-         <widget class="QComboBox" name="GoodsNameBox"/>
+         <widget class="QComboBox" name="GoodsNameBox">
+          <property name="styleSheet">
+           <string notr="true">
+background-color: rgb(101, 166, 209);</string>
+          </property>
+         </widget>
         </item>
         <item row="6" column="3">
          <widget class="QPushButton" name="loadBtn">
@@ -135,6 +182,10 @@
         </item>
         <item row="3" column="0">
          <widget class="QLabel" name="label">
+          <property name="styleSheet">
+           <string notr="true">
+background-color: rgb(101, 166, 209);</string>
+          </property>
           <property name="text">
            <string>Название товара:</string>
           </property>
@@ -142,6 +193,10 @@
         </item>
         <item row="3" column="2">
          <widget class="QLabel" name="label_3">
+          <property name="styleSheet">
+           <string notr="true">
+background-color: rgb(101, 166, 209);</string>
+          </property>
           <property name="text">
            <string>Количество на складе:</string>
           </property>
@@ -149,6 +204,10 @@
         </item>
         <item row="4" column="3">
          <widget class="QLabel" name="label_5">
+          <property name="styleSheet">
+           <string notr="true">
+background-color: rgb(101, 166, 209);</string>
+          </property>
           <property name="text">
            <string>Цена за все:</string>
           </property>
@@ -156,6 +215,10 @@
         </item>
         <item row="4" column="4">
          <widget class="QLabel" name="manyCashTxt">
+          <property name="styleSheet">
+           <string notr="true">
+background-color: #FFA200;</string>
+          </property>
           <property name="text">
            <string>0</string>
           </property>
@@ -164,7 +227,9 @@
         <item row="5" column="1" rowspan="2">
          <widget class="QLabel" name="warningTxt">
           <property name="styleSheet">
-           <string notr="true">color: rgb(204, 0, 0);</string>
+           <string notr="true">color: rgb(204, 0, 0);
+
+background-color: rgb(101, 166, 209);</string>
           </property>
           <property name="text">
            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600; color:#cc0000;&quot;&gt;&lt;br/&gt;&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
@@ -183,6 +248,20 @@
         </item>
        </layout>
       </widget>
+     </widget>
+    </item>
+    <item>
+     <widget class="QLabel" name="label_6">
+      <property name="text">
+       <string>Общая цена всех заказов:</string>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QLabel" name="allPrice">
+      <property name="text">
+       <string/>
+      </property>
      </widget>
     </item>
    </layout>

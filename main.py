@@ -45,6 +45,7 @@ class Interface(QtWidgets.QMainWindow, interface.Ui_MainWindow):
         self.nextBtn.clicked.connect(self.initLoadDataFromName)
         self.nextBtn.clicked.connect(self.changeManyCash)
         self.nextBtn.clicked.connect(self.warningStoreCount)
+        self.nextBtn.clicked.connect(self.priceOfAllOrders)
         self.delBtn.clicked.connect(self.delete_all)
         self.delBtn.clicked.connect(self.initLoadDataFromName)
 
@@ -56,7 +57,7 @@ class Interface(QtWidgets.QMainWindow, interface.Ui_MainWindow):
 
         self.changeManyCash()
         self.loadBtn.hide()
-        self.delBtn.hide()
+        # self.delBtn.hide()
 
     def warning(self, code):
 
@@ -82,6 +83,7 @@ class Interface(QtWidgets.QMainWindow, interface.Ui_MainWindow):
             self.changeManyCash()
             self.OperTypeBox.setCurrentIndex(1)
             self.loadDataForOrders()
+            self.priceOfAllOrders()
 
 
     def nextBtnPressed(self):
@@ -119,7 +121,7 @@ class Interface(QtWidgets.QMainWindow, interface.Ui_MainWindow):
             print("долг")
             conn.commit()
 
-        if OperType == "Безналичный расчет":
+        if OperType == "Безналичный_расчет":
             if (dolgAndMax[0][2] < allCash):
                 self.warning(1)
                 return
@@ -148,8 +150,8 @@ class Interface(QtWidgets.QMainWindow, interface.Ui_MainWindow):
         conn.commit()
 
         cursor.execute(
-            f"""INSERT INTO Заказы (id_клиента, id_товара, Количество_купленного, Общая_цена) VALUES ((
-            SELECT id FROM Клиенты WHERE Имя='{NameKlient}'), (SELECT id FROM Товары WHERE Название='{NameGoods}'), 
+            f"""INSERT INTO Заказы (id_клиента, id_товара, Тип_операции, Количество_купленного, Общая_цена) VALUES ((
+            SELECT id FROM Клиенты WHERE Имя='{NameKlient}'), (SELECT id FROM Товары WHERE Название='{NameGoods}'), '{OperType}',
             {countOrder}, {allCash}); """
         )
         conn.commit()
@@ -187,8 +189,8 @@ class Interface(QtWidgets.QMainWindow, interface.Ui_MainWindow):
             self.warningTxt.setText("ok")
 
     def setOperIntoOperTypeBox(self):
-        self.OperTypeBox.addItem("Наличный расчет")
-        self.OperTypeBox.addItem("Безналичный расчет")
+        self.OperTypeBox.addItem("Наличный_расчет")
+        self.OperTypeBox.addItem("Безналичный_расчет")
         self.OperTypeBox.addItem("Кредит")
         self.OperTypeBox.addItem("Бартер")
         self.OperTypeBox.addItem("Взаимозачет")
@@ -239,7 +241,7 @@ class Interface(QtWidgets.QMainWindow, interface.Ui_MainWindow):
 
     def loadDataForOrders(self):
         cursor.execute(
-            f'''SELECT O.id, K.Имя, G.Название, O.Количество_купленного, O.Общая_цена
+            f'''SELECT O.id, K.Имя, G.Название, O.Тип_операции, O.Количество_купленного, O.Общая_цена
             FROM Заказы AS O, Товары AS G, Клиенты AS K WHERE O.id_клиента=K.id AND 
             O.id_товара=G.id;''')
         all_data = cursor.fetchall()
@@ -248,7 +250,7 @@ class Interface(QtWidgets.QMainWindow, interface.Ui_MainWindow):
 
 
         # Названия для столбцов
-        column_names = ['id', 'Заказчик', 'Товар', 'Количество', 'Общая_цена']
+        column_names = ['id', 'Заказчик', 'Товар', 'Тип_операции', 'Количество', 'Общая_цена']
         def to_table_item(item):
             return QtWidgets.QTableWidgetItem(str(item))
         for i, el in enumerate(column_names):
@@ -260,6 +262,17 @@ class Interface(QtWidgets.QMainWindow, interface.Ui_MainWindow):
             self.allOrdersTable.insertRow(row_number)
             for column_number, data in enumerate(row_data):
                 self.allOrdersTable.setItem(row_number, column_number, QtWidgets.QTableWidgetItem(str(data)))
+    def priceOfAllOrders(self):
+        cursor.execute(
+            f"""SELECT Общая_цена FROM Заказы WHERE Общая_цена > 0;"""
+        )
+        rows = cursor.fetchall()
+        print(rows)
+        allCash = 0
+        for row in rows:
+            print(row[0])
+            allCash = allCash +row[0]
+        self.allPrice.setText(str(allCash))
 
 
 class Barter(QtWidgets.QDialog, Barter.Ui_Dialog):
@@ -320,9 +333,9 @@ class Barter(QtWidgets.QDialog, Barter.Ui_Dialog):
         )
         conn.commit()
         cursor.execute(
-            f"""INSERT INTO Заказы (id_клиента, id_товара, Количество_купленного) VALUES ((
+            f"""INSERT INTO Заказы (id_клиента, id_товара, Тип_операции, Количество_купленного) VALUES ((
                     SELECT id FROM Клиенты WHERE Имя='{globalName}'), (SELECT id FROM Товары 
-                    WHERE Название='{self.StoreGoodsNameBox.currentText()}'), 
+                    WHERE Название='{self.StoreGoodsNameBox.currentText()}'), 'Бартер',
                     {self.StoreCountSpinBox.value()}); """
         )
         conn.commit()

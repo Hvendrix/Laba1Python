@@ -35,7 +35,8 @@ def main():
     def createOrders():
         cursor.execute(
             '''CREATE TABLE Заказы (id serial PRIMARY KEY, id_клиента INT REFERENCES Клиенты (id) ON DELETE CASCADE, 
-            id_товара INT REFERENCES Товары (id) ON DELETE CASCADE, Количество_купленного INT, Общая_цена INT); '''
+            id_товара INT REFERENCES Товары (id) ON DELETE CASCADE, Тип_операции varchar(50),
+            Количество_купленного INT, Общая_цена INT); '''
         )
         conn.commit()
 
