@@ -5,6 +5,7 @@ import psycopg2
 from PyQt5 import QtWidgets, QtCore, QtGui
 import interface
 import warning
+import Barter
 from PyQt5.QtWidgets import QHeaderView
 import PSQL
 from auth import *
@@ -15,7 +16,7 @@ conn = psycopg2.connect(dbname=dbnameSql, user=loginSql,
                         password=passSql, host='localhost', port="5432")
 cursor = conn.cursor()
 
-
+globalName = ""
 
 class Interface(QtWidgets.QMainWindow, interface.Ui_MainWindow):
     def __init__(self):
@@ -38,6 +39,7 @@ class Interface(QtWidgets.QMainWindow, interface.Ui_MainWindow):
         self.GoodsNameBox.currentIndexChanged.connect(self.changeManyCash)
         self.GoodsNameBox.currentIndexChanged.connect(self.warningStoreCount)
         self.OperTypeBox.currentIndexChanged.connect(self.changeManyCash)
+        self.OperTypeBox.currentIndexChanged.connect(self.barterWindow)
 
         self.nextBtn.clicked.connect(self.nextBtnPressed)
         self.nextBtn.clicked.connect(self.initLoadDataFromName)
@@ -51,6 +53,8 @@ class Interface(QtWidgets.QMainWindow, interface.Ui_MainWindow):
 
         self.allOrdersTable.horizontalHeader().setMinimumSectionSize(75)
         self.allOrdersTable.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
+        self.barterWindow()
+
 
     def warning(self, code):
 
@@ -65,6 +69,17 @@ class Interface(QtWidgets.QMainWindow, interface.Ui_MainWindow):
         )
         conn.commit()
         PSQL.main()
+
+    def barterWindow(self):
+        if self.OperTypeBox.currentText() == "Бартер":
+            global globalName
+            globalName = self.NameBox.currentText()
+            window = Barter()
+            window.setModal(True)
+            window.exec_()
+            self.changeManyCash()
+            self.OperTypeBox.setCurrentIndex(1)
+            self.loadDataForOrders()
 
 
     def nextBtnPressed(self):
@@ -194,11 +209,6 @@ class Interface(QtWidgets.QMainWindow, interface.Ui_MainWindow):
         self.amountOnStoreTxt.setText(str(rows[0][1]))
         self.manyCashTxt.setText(str(rows[0][0]))
 
-    # def setUpText1(self):
-    #     indexB = self.NameBox.currentText()
-    #     self.KommentTxt.setText(indexB)
-
-
     def initLoadDataFromName(self):
         name = self.NameBox.currentText()
         sName = str(name)
@@ -227,7 +237,7 @@ class Interface(QtWidgets.QMainWindow, interface.Ui_MainWindow):
 
     def loadDataForOrders(self):
         cursor.execute(
-            f'''SELECT O.id, K.Имя, K.Долг, G.Название, O.Количество_купленного, O.Общая_цена
+            f'''SELECT O.id, K.Имя, G.Название, O.Количество_купленного, O.Общая_цена
             FROM Заказы AS O, Товары AS G, Клиенты AS K WHERE O.id_клиента=K.id AND 
             O.id_товара=G.id;''')
         all_data = cursor.fetchall()
@@ -236,7 +246,7 @@ class Interface(QtWidgets.QMainWindow, interface.Ui_MainWindow):
 
 
         # Названия для столбцов
-        column_names = ['id', 'Заказчик', 'Долг', 'Товар', 'Количество', 'Общая_цена']
+        column_names = ['id', 'Заказчик', 'Товар', 'Количество', 'Общая_цена']
         def to_table_item(item):
             return QtWidgets.QTableWidgetItem(str(item))
         for i, el in enumerate(column_names):
@@ -250,25 +260,102 @@ class Interface(QtWidgets.QMainWindow, interface.Ui_MainWindow):
                 self.allOrdersTable.setItem(row_number, column_number, QtWidgets.QTableWidgetItem(str(data)))
 
 
+class Barter(QtWidgets.QDialog, Barter.Ui_Dialog):
+    def __init__(self):
+        super().__init__()
+        self.setupUi(self)
+        self.NameGoodsLoad()
+        self.changeAnyBox()
+        self.count()
+        self.okBtn.clicked.connect(self.update)
+        self.cancelBtn.clicked.connect(self.close)
+
+    def changeAnyBox(self):
+        self.ClientCountSpinBox.valueChanged.connect(self.price)
+        self.StoreCountSpinBox.valueChanged.connect(self.price)
+        self.ClientGoodsNameBox.currentIndexChanged.connect(self.price)
+        self.StoreGoodsNameBox.currentIndexChanged.connect(self.price)
+        self.StoreGoodsNameBox.currentIndexChanged.connect(self.count)
+
+    def NameGoodsLoad(self):
+        for row in self.selectGoods():
+            self.StoreGoodsNameBox.addItem(row[0])
+            self.ClientGoodsNameBox.addItem(row[0])
+        self.price()
+    def price(self):
+        for row in self.selectGoods(self.StoreGoodsNameBox.currentText()):
+            self.StorePrice.setText(str(row[1]*self.StoreCountSpinBox.value()))
+        for row in self.selectGoods(self.ClientGoodsNameBox.currentText()):
+            self.ClientPrice.setText(str(row[1]*self.ClientCountSpinBox.value()))
+    def count(self):
+        for row in self.selectGoods(self.StoreGoodsNameBox.currentText()):
+            self.countOnStore.setText(str(row[2]))
+    def selectGoods(self, name=None):
+        if isinstance(name, str):
+            cursor.execute(
+                f"""SELECT Название, Цена, Количество From Товары WHERE Название='{name}';"""
+            )
+            return cursor.fetchall()
+        else:
+            cursor.execute(
+                f"""SELECT Название, Цена, Количество From Товары;"""
+            )
+            return cursor.fetchall()
+    def update(self):
+        global globalName
+        if self.ClientPrice.text() != self.StorePrice.text():
+            self.warning(1)
+            return
+        if self.StoreCountSpinBox.value() > int(self.countOnStore.text()):
+            self.warning(1)
+            return
+        if self.StoreGoodsNameBox.currentText() == self.ClientGoodsNameBox.currentText():
+            self.warning(1)
+            return
+        cursor.execute(
+            f"""UPDATE Товары SET Количество = Количество + {self.ClientCountSpinBox.value()} 
+            WHERE Название = '{self.ClientGoodsNameBox.currentText()}';"""
+        )
+        conn.commit()
+        cursor.execute(
+            f"""INSERT INTO Заказы (id_клиента, id_товара, Количество_купленного) VALUES ((
+                    SELECT id FROM Клиенты WHERE Имя='{globalName}'), (SELECT id FROM Товары 
+                    WHERE Название='{self.StoreGoodsNameBox.currentText()}'), 
+                    {self.StoreCountSpinBox.value()}); """
+        )
+        conn.commit()
+        self.close()
+
+    def warning(self, code):
+        window2 = Warning(1)
+        window2.setModal(True)
+        # window2.show()
+        window2.exec_()
 
 class Warning(QtWidgets.QDialog, warning.Ui_Dialog):
-    def __init__(self):
+    def __init__(self, code=None):
         super().__init__()
         self.setupUi(self)
         self.warnOkBtn.clicked.connect(self.exit_warn)
 
+
     def exit_warn(self):
         self.close()
 
-
+def printTest(*scores):
+    for score in scores:
+        print(score)
 def main():
     print("Let's start")
+    printTest(1,2,3,4)
     # PSQL.main()
 
     a = [1, 5, 9, 2]
     for i, x in enumerate(a):
         print("test", i, x)
 
+    b = [*a, 9, 10, 11]
+    print(b)
 
     cursor.execute(f'''SELECT Название, Количество FROM Товары''')
 
