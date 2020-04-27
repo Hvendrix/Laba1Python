@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1052</width>
+    <width>1163</width>
     <height>852</height>
    </rect>
   </property>
@@ -28,24 +28,10 @@
         <string>Оформление заказа</string>
        </attribute>
        <layout class="QGridLayout" name="gridLayout">
-        <item row="6" column="0">
-         <widget class="QPushButton" name="loadBtn">
-          <property name="text">
-           <string>Load</string>
-          </property>
-         </widget>
-        </item>
         <item row="4" column="1">
-         <widget class="QLabel" name="oneCashTxt">
+         <widget class="QLabel" name="label_4">
           <property name="text">
-           <string>0</string>
-          </property>
-         </widget>
-        </item>
-        <item row="4" column="2">
-         <widget class="QLabel" name="manyCashTxt">
-          <property name="text">
-           <string>0</string>
+           <string>Цена за одну штуку</string>
           </property>
          </widget>
         </item>
@@ -66,20 +52,10 @@
           </property>
          </widget>
         </item>
-        <item row="3" column="1">
-         <widget class="QLabel" name="label">
-          <property name="text">
-           <string>Название товара</string>
-          </property>
-         </widget>
-        </item>
         <item row="0" column="1">
          <widget class="QComboBox" name="NameBox"/>
         </item>
-        <item row="3" column="0">
-         <widget class="QComboBox" name="GoodsNameBox"/>
-        </item>
-        <item row="3" column="2">
+        <item row="3" column="3">
          <widget class="QLabel" name="amountOnStoreTxt">
           <property name="sizePolicy">
            <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
@@ -98,24 +74,7 @@
           </property>
          </widget>
         </item>
-        <item row="6" column="1">
-         <widget class="QPushButton" name="nextBtn">
-          <property name="text">
-           <string>Продолжить</string>
-          </property>
-         </widget>
-        </item>
-        <item row="3" column="3" rowspan="2">
-         <widget class="QLabel" name="warningTxt">
-          <property name="styleSheet">
-           <string notr="true">color: rgb(204, 0, 0);</string>
-          </property>
-          <property name="text">
-           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600; color:#cc0000;&quot;&gt;&lt;br/&gt;&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-          </property>
-         </widget>
-        </item>
-        <item row="1" column="0" colspan="4">
+        <item row="1" column="0" colspan="5">
          <widget class="QTableWidget" name="tableWidget">
           <property name="minimumSize">
            <size>
@@ -143,10 +102,72 @@
           <column/>
          </widget>
         </item>
+        <item row="4" column="2">
+         <widget class="QLabel" name="oneCashTxt">
+          <property name="text">
+           <string>0</string>
+          </property>
+         </widget>
+        </item>
+        <item row="6" column="0">
+         <widget class="QPushButton" name="nextBtn">
+          <property name="text">
+           <string>Продолжить</string>
+          </property>
+         </widget>
+        </item>
+        <item row="3" column="1">
+         <widget class="QComboBox" name="GoodsNameBox"/>
+        </item>
         <item row="6" column="3">
+         <widget class="QPushButton" name="loadBtn">
+          <property name="text">
+           <string>Load</string>
+          </property>
+         </widget>
+        </item>
+        <item row="6" column="4">
          <widget class="QPushButton" name="delBtn">
           <property name="text">
            <string>Удалить данные</string>
+          </property>
+         </widget>
+        </item>
+        <item row="3" column="0">
+         <widget class="QLabel" name="label">
+          <property name="text">
+           <string>Название товара:</string>
+          </property>
+         </widget>
+        </item>
+        <item row="3" column="2">
+         <widget class="QLabel" name="label_3">
+          <property name="text">
+           <string>Количество на складе:</string>
+          </property>
+         </widget>
+        </item>
+        <item row="4" column="3">
+         <widget class="QLabel" name="label_5">
+          <property name="text">
+           <string>Цена за все:</string>
+          </property>
+         </widget>
+        </item>
+        <item row="4" column="4">
+         <widget class="QLabel" name="manyCashTxt">
+          <property name="text">
+           <string>0</string>
+          </property>
+         </widget>
+        </item>
+        <item row="5" column="1" rowspan="2">
+         <widget class="QLabel" name="warningTxt">
+          <property name="styleSheet">
+           <string notr="true">color: rgb(204, 0, 0);</string>
+          </property>
+          <property name="text">
+           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600; color:#cc0000;&quot;&gt;&lt;br/&gt;&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
           </property>
          </widget>
         </item>
@@ -171,7 +192,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1052</width>
+     <width>1163</width>
      <height>28</height>
     </rect>
    </property>

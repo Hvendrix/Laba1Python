@@ -53,8 +53,10 @@ class Interface(QtWidgets.QMainWindow, interface.Ui_MainWindow):
 
         self.allOrdersTable.horizontalHeader().setMinimumSectionSize(75)
         self.allOrdersTable.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
-        self.barterWindow()
 
+        self.changeManyCash()
+        self.loadBtn.hide()
+        self.delBtn.hide()
 
     def warning(self, code):
 
