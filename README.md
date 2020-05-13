@@ -1,3 +1,3 @@
 # Laba1Python
-Python and PSQL example work
-requirements сгенерирован автоматически, поэтому тянет много лишних зависимостей
+Python and PSQL example work.
+Файл requirements сгенерирован автоматически, поэтому тянет много лишних зависимостей
